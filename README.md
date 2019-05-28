@@ -35,7 +35,7 @@ Note: Tested on Ubuntu 18.04, Mac, and Windows
 First, download or clone "dev_setup.Dockerfile" into host system.
 
 ```
-docker build -t code_server:latest -f dev_setup.Dockerfile .
+docker build -t code_server:latest -f dev_setup .
 ```
 
 To run container from build (don't forget to change your host folder)

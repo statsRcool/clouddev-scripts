@@ -52,23 +52,6 @@ function install_python3_pip3(){
     (python -V && pip -V); 
 }
 
-function setup_r(){
-    echo "Installing r..."; 
-    (sudo apt-get update && sudo apt-get install gdebi-core && sudo apt-get install r-base);
-}
-
-function setup_rserver(){
-    echo "Installing r server..."; 
-    (sudo apt-get install gdebi-core && wget https://download2.rstudio.org/server/bionic/amd64/rstudio-server-1.2.1335-amd64.deb && sudo gdebi rstudio-server-1.2.1335-amd64.deb);
-}
-
-function install_r_pack(){
-    echo "Installing r packages..."; 
-    (sudo apt-get install r-cran-rmysql);
-    (sudo R -e 'install.packages(c("Rcpp","DBI","RMySQL","bigrquery","anytime","jsonlite","jsonify","httr","plotly","dplyr","randomForest","prophet"), lib="/usr/lib/R/library")');
-    (sudo R -e 'install.packages(c("plumber", "tibble"), lib="/usr/lib/R/library")');
-}
-
 function setup_codeserver_vm(){
     echo "Getting code server 1.939-vsc1.33.1 tar...";
     (wget https://github.com/cdr/code-server/releases/download/1.1099-vsc1.33.1/code-server1.1099-vsc1.33.1-linux-x64.tar.gz);

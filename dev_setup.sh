@@ -12,28 +12,6 @@ function switch_sudo_users(){
     (su - $username && sudo whoami);
 }
 
-function install_git(){
-    echo "Installing git...";
-    (sudo apt update && sudo apt install git);
-    echo "Checking git version...";
-    (git --version);
-    (git config --global user.name "Collin Paran" && git config --global user.email "collin@collinparan.com");
-    #If errors make sure noclobber is set to false
-    # set -o | grep noclobber;
-}
-
-function setup_git(){
-    #git@github.com:username/new_repo
-    read -p "Set remote git url: " remotegiturl;
-    read -p "Set remote git name (ex. origin): " remotegitname;
-    read -p "Set local git dir: " localgitdir;
-    echo "Adding git remote...";
-    (git remote add $remotegitname $remotegiturl);
-    echo "Setting up local git dir and initial pull...";
-    (cd ~ && mkdir $localgitdir && cd $localgitdir && git pull $remotegitname master && git fetch $remotegitname && git push $remotegitname master);
-    echo "Listing all git remotes...";
-    (git remote -v);
-}
 
 function install_python3_pip3(){
     echo "Installing updates & setup for python apt..."; 
@@ -172,7 +150,7 @@ function get_ssl(){
 }
 
 echo "Which would you like to do?"
-select pd in "setup_codeserver" "only_start_codeserver" "setup_codeserver_serverblock" "setup_codeserver_service" "install_certbot" "get_ssl" "install_nginx" "setup_nginx_serverblock" "restart_nginx_service" "install_setup_python37" "install_git" "setup_git" "create_sudo_user" "exit"; do 
+select pd in "setup_codeserver" "only_start_codeserver" "setup_codeserver_serverblock" "setup_codeserver_service" "install_certbot" "get_ssl" "install_nginx" "setup_nginx_serverblock" "restart_nginx_service" "install_setup_python37" "create_sudo_user" "exit"; do 
     case $pd in 
         setup_codeserver ) setup_codeserver_vm; start_codeserver; exit;;
         only_start_codeserver ) start_codeserver; exit;;
@@ -185,8 +163,6 @@ select pd in "setup_codeserver" "only_start_codeserver" "setup_codeserver_server
         restart_nginx_service ) restart_nginx_service; exit;;
         install_setup_python37 ) install_python3_pip3; exit;;
         create_sudo_user ) create_sudo_user; exit;;
-        install_git ) install_git; exit;;
-        setup_git ) setup_git; exit;;
         exit ) exit;;
     esac
 done

@@ -26,6 +26,9 @@ function install_mariadb(){
     (mysql -V);
     echo "Securing MariaDB...";
     (sudo mysql_secure_installation);
+    read -p "Bind address to 0.0.0.0 and uncomment port 3306...";
+    (sudo nano /etc/mysql/mariadb.conf.d/50-server.cnf);
+    (sudo systemctl restart mysql.service && sudo systemctl restart mariadb.service);
 }
 
 function setup_mariadb_user(){
@@ -37,6 +40,14 @@ function setup_mariadb_user(){
     (mysql --host=localhost --user=root --password=$rootpass  -e "CREATE USER '$username'@'%' IDENTIFIED BY '$pass'; GRANT ALL PRIVILEGES ON * . * TO '$username'@'%' WITH GRANT OPTION; FLUSH PRIVILEGES;");
 }
 
+function install_php(){
+    echo "Installing dependencies...";
+    (sudo add-apt-repository universe);
+    echo "Installing PHP...";
+    (sudo apt install php-fpm php-mysql);
+}
+
+
 function setup_nginx_serverblock(){
     read -p "Domain or dot com: " domain;
     (sudo mkdir -p /var/www/$domain/html && sudo chown -R $USER:$USER /var/www/$domain/html && sudo chmod -R 755 /var/www/$domain);
@@ -47,13 +58,16 @@ function setup_nginx_serverblock(){
         <h1>Success!  The $domain server block is working!</h1>
     </body>
     </html>" > index.html);
+    echo "Creating initial php...";
+    (cd /var/www/$domain/html && echo "<?php
+    phpinfo();" > info.php);
     echo "Creating nginx sites available file...";
     (cd /etc/nginx/sites-available && echo "server {
         listen 80;
         listen [::]:80;
 
         root /var/www/$domain/html;
-        index index.html index.htm index.nginx-debian.html;
+        index index.php index.html index.htm index.nginx-debian.html;
 
         server_name $domain;
 
@@ -62,10 +76,19 @@ function setup_nginx_serverblock(){
             # as directory, then fall back to displaying a 404.
             try_files \$uri \$uri/ =404;
         }
+
+        location ~ \.php\$ {
+                include snippets/fastcgi-php.conf;
+                fastcgi_pass unix:/var/run/php/php7.2-fpm.sock;
+        }
+
+        location ~ /\.ht {
+                deny all;
+        }
     }" > $domain);
     echo "Creating symlink...";
     (sudo ln -s /etc/nginx/sites-available/$domain /etc/nginx/sites-enabled/);
-    echo "Uncomment 'server_names_hash_bucket_size' & restart nginx...";
+    read -p "Uncomment 'server_names_hash_bucket_size' & restart nginx...";
     (sudo nano /etc/nginx/nginx.conf);
 }
 

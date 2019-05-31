@@ -115,11 +115,12 @@ function get_ssl(){
 
 
 echo "Which would you like to do?"
-select pd in "install_nginx" "install_mariadb" "setup_mariadb_user" "setup_nginx_serverblock" "restart_nginx_service" "install_certbot" "get_ssl"  "create_sudo_user" "exit"; do 
+select pd in "install_nginx" "install_mariadb" "setup_mariadb_user" "install_php" "setup_nginx_serverblock" "restart_nginx_service" "install_certbot" "get_ssl"  "create_sudo_user" "exit"; do 
     case $pd in 
         install_nginx ) install_nginx; exit;;
         install_mariadb ) install_mariadb; exit;;
         setup_mariadb_user ) setup_mariadb_user; exit;;
+        install_php ) install_php; exit;;
         setup_nginx_serverblock ) setup_nginx_serverblock; exit;;
         restart_nginx_service ) restart_nginx_service; exit;;
         install_certbot ) install_certbot; exit;;

@@ -48,3 +48,4 @@ For example (Mac):
 ```
 docker run -it -p 8080:8080 -v /Users/admin/Documents/codeserver:/root -e PASSWORD='YourP@ssw0rd' --name devserver -d code_server:latest --allow-http -p 8080
 ```
+Navigate to the url [localhost:8080](http://localhost:8080)

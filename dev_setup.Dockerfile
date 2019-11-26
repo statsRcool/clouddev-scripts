@@ -6,17 +6,21 @@ WORKDIR /root
 RUN apt update && \
     apt -y install sudo && \
     apt -y install git nodejs npm yarn wget 
-    
-RUN apt-get update && apt-get install -y --no-install-recommends \
-    python3.7 \
-    python3-pip \
-    && \
-    apt-get clean && \
-    rm -rf /var/lib/apt/lists/*
 
-RUN rm /usr/bin/python && sudo ln -s /usr/bin/python3 /usr/bin/python && \
-    sudo ln -s /usr/bin/pip3 /usr/bin/pip && \
-    sudo apt-mark hold python python-pip
+RUN sudo apt-get update && \
+    sudo apt install -y software-properties-common && \
+    sudo add-apt-repository ppa:deadsnakes/ppa
+
+RUN sudo apt install -y python3.7
+
+RUN rm /usr/bin/python && \
+    sudo ln -s /usr/bin/python3 /usr/bin/python
+
+RUN sudo apt install -y python3-pip
+
+RUN sudo ln -s /usr/bin/pip3 /usr/bin/pip 
+
+RUN sudo apt-mark hold python python-pip
 
 RUN pip install pandas matplotlib flask flasgger
 
